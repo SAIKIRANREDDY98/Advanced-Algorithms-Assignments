@@ -1,0 +1,95 @@
+#include<iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int row;
+    int col;
+    int data;
+    Node* next;
+
+    Node(int r, int c, int d) : row(r), col(c), data(d), next(nullptr) {}
+};
+
+
+Node* createNewNode(int row, int col, int data)
+{
+    return new Node(row, col, data);
+}
+
+
+void insertNode(Node*& head, int row, int col, int data)
+{
+    Node* newNode = createNewNode(row, col, data);
+
+    if (head == nullptr)
+    {
+        head = newNode;
+    }
+    else
+    {
+        Node* temp = head;
+        while (temp->next != nullptr)
+        {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+
+void printList(Node* head)
+{
+    Node* temp = head;
+    cout << "row_position:";
+    while (temp != nullptr)
+    {
+        cout << temp->row << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+    cout << "column_position:";
+
+    temp = head;
+    while (temp != nullptr)
+    {
+        cout << temp->col << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+    cout << "Value:";
+
+    temp = head;
+    while (temp != nullptr)
+    {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+}
+
+
+int main()
+{
+ 
+    int sparseMatrix[4][5] = { {0, 0, 3, 0, 4},
+                               {0, 0, 5, 7, 0},
+                               {0, 0, 0, 0, 0},
+                               {0, 2, 6, 0, 0} };
+
+    
+    Node* first = nullptr;
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            if (sparseMatrix[i][j] != 0)
+                insertNode(first, i, j, sparseMatrix[i][j]);
+        }
+    }
+
+    printList(first);
+
+    return 0;
+}
