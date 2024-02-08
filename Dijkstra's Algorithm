@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+
+int miniDist(int distance[], bool Tset[], int V) {
+    int minimum = INT_MAX, ind;
+              
+    for(int k = 0; k < V; k++) {
+        if(Tset[k] == false && distance[k] <= minimum) {
+            minimum = distance[k];
+            ind = k;
+        }
+    }
+    return ind;
+}
+
+void DijkstraAlgo(vector<vector<int>>& graph, int src, int V) {
+    int distance[V];
+    bool Tset[V];
+    
+    for(int k = 0; k < V; k++) {
+        distance[k] = INT_MAX;
+        Tset[k] = false;    
+    }
+    
+    distance[src] = 0;   
+    
+    for(int k = 0; k < V; k++) {
+        int m = miniDist(distance, Tset, V); 
+        Tset[m] = true;
+        for(int k = 0; k < V; k++) {
+            if(!Tset[k] && graph[m][k] && distance[m] != INT_MAX && distance[m] + graph[m][k] < distance[k])
+                distance[k] = distance[m] + graph[m][k];
+        }
+    }
+    cout << "Vertex\t\tDistance from source vertex" << endl;
+    for(int k = 0; k < V; k++) {
+        char str = 65 + k; 
+        cout << str << "\t\t\t" << distance[k] << endl;
+    }
+}
+
+int main() {
+    int V, E;
+    cout << "Enter the number of vertices: ";
+    cin >> V;
+    cout << "Enter the number of edges: ";
+    cin >> E;
+    
+    vector<vector<int>> graph(V, vector<int>(V, 0));
+    
+    cout << "Enter the edges and their weights (source destination weight):" << endl;
+    for(int i = 0; i < E; i++) {
+        int src, dest, weight;
+        cin >> src >> dest >> weight;
+        graph[src][dest] = weight;
+        graph[dest][src] = weight; 
+    }
+    
+    int src;
+    cout << "Enter the source vertex: ";
+    cin >> src;
+    
+    DijkstraAlgo(graph, src, V);
+    
+    return 0;                           
+}
