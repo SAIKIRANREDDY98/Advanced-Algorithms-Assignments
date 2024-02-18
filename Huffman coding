@@ -1,0 +1,69 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+struct MinHeapNode {
+    char data;
+    unsigned freq;
+    MinHeapNode* left, * right;
+    MinHeapNode(char data, unsigned freq) : data(data), freq(freq), left(nullptr), right(nullptr) {}
+};
+
+void printCodes(MinHeapNode* root, string str) {
+    if (!root) {
+        return;
+    }
+    if (root->data != '$') {
+        cout << root->data << ": " << str << "\n";
+    }
+    printCodes(root->left, str + "0");
+    printCodes(root->right, str + "1");
+}
+
+
+void HuffmanCodes(char data[], int freq[], int size) {
+    struct compare {
+        bool operator()(MinHeapNode* l, MinHeapNode* r) {
+            return (l->freq > r->freq);
+        }
+    };
+    priority_queue<MinHeapNode*, vector<MinHeapNode*>, compare> minHeap;
+    for (int i = 0; i < size; ++i) {
+        minHeap.push(new MinHeapNode(data[i], freq[i]));
+    }
+    while (minHeap.size() != 1) {
+        MinHeapNode* left = minHeap.top();
+        minHeap.pop();
+        MinHeapNode* right = minHeap.top();
+        minHeap.pop();
+        MinHeapNode* top = new MinHeapNode('$', left->freq + right->freq);
+        top->left = left;
+        top->right = right;
+        minHeap.push(top);
+    }
+    int arr[50], top = 0;
+    printCodes(minHeap.top(), "");
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of elements: ";
+    cin >> n;
+    
+    char data[n];
+    int freq[n];
+    
+    cout << "Enter the characters: ";
+    for (int i = 0; i < n; i++) {
+        cin >> data[i];
+    }
+    
+    cout << "Enter the frequencies: ";
+    for (int i = 0; i < n; i++) {
+        cin >> freq[i];
+    }
+    
+    HuffmanCodes(data, freq, n);
+    
+    return 0;
+}
